@@ -1,0 +1,33 @@
+{
+  "name": "issuetracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LarioStax/28-IssueTracker.git"
+  },
+  "author": "Lario Stax Ivankovic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LarioStax/28-IssueTracker/issues"
+  },
+  "homepage": "https://github.com/LarioStax/28-IssueTracker#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "mocha": "^7.1.1",
+    "mongodb": "^3.5.6",
+    "zombie": "^6.1.4"
+  }
+}
