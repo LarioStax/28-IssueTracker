@@ -13,22 +13,66 @@ var MongoClient = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 const mongoose = require("mongoose");
 
-const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
+const Project = require("../models/project.js");
+const Issue = require("../models/issue.js");
+
+// const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
 
 module.exports = function (app) {
 
   app.route('/api/issues/:project')
   
     .get(function (req, res){
-      var project = req.params.project;
+      let project = req.params.project;
       
     })
     
     .post(function (req, res){
       var project = req.params.project;
-      console.log(project);
-      console.log(req.body);
-      
+
+      let conditions = {name: project};
+      let update = {
+        $setOnInsert: {
+          name: project,
+          created_on: new Date(),
+          issues: []
+        }
+      };
+      let options = {upsert: true, new: true};
+
+      // Search for a project with given project name, if not found, create one
+      Project.findOneAndUpdate(conditions, update, options, function(err, updatedProject) {
+        if (err) {
+          console.log(err);
+        } else {
+          // Search for the (eventually newly created) project with given project name
+          Project.findOne(conditions, function(err, foundProject) {
+            if (err) {
+              console.log(err);
+            } else {
+              let newIssue = {
+                issue_title: req.body.issue_title,
+                issue_text: req.body.issue_text,
+                created_by: req.body.created_by,
+                assigned_to: req.body.assigned_to || "",
+                status_text: req.body.status_text || "",
+                open: true
+              }
+              //Create new Issue and push it to the issues array of the found object
+              Issue.create(newIssue, function(err, createdIssue) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  foundProject.issues.push(createdIssue);
+                  foundProject.save();
+                  console.log(createdIssue);
+                  res.redirect(process.cwd() + "/" + project);
+                }
+              })
+            }
+          })
+        }
+      });
     })
     
     .put(function (req, res){
