@@ -5,6 +5,8 @@ const bodyParser  = require('body-parser');
 const expect      = require('chai').expect;
 const cors        = require('cors');
 const helmet      = require("helmet");
+const dotenv      = require("dotenv").config();
+const mongoose    = require("mongoose");
 
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
@@ -20,6 +22,16 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+mongoose.connect(process.env.DATABASE,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+
+mongoose.connection.on("connected", function() {
+  console.log("Mongoose connected to the database.");
+})
 
 //Sample front-end
 app.route('/:project/')
