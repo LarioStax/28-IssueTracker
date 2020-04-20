@@ -24,21 +24,22 @@ module.exports = function (app) {
   
     .get(function (req, res){
       let project = req.params.project;
-      
+      let conditions = {name: project};
+      Project.findOne(conditions).populate("issues").exec(function (err, foundProject) { //Populate required - returns only individual issues._ids otherwise
+        if (err || !foundProject) {
+          console.log(err);
+        } else {
+          res.json(foundProject.issues);
+        }
+      })
     })
     
     .post(function (req, res){
       var project = req.params.project;
 
       let conditions = {name: project};
-      let update = {
-        $setOnInsert: {
-          name: project,
-          created_on: new Date(),
-          issues: []
-        }
-      };
-      let options = {upsert: true, new: true};
+      let update = {};
+      let options = {upsert: true, setDefaultsOnInsert: true, new: true};
 
       // Search for a project with given project name, if not found, create one
       Project.findOneAndUpdate(conditions, update, options, function(err, updatedProject) {
@@ -63,10 +64,11 @@ module.exports = function (app) {
                 if (err) {
                   console.log(err);
                 } else {
+                  createdIssue.save();
                   foundProject.issues.push(createdIssue);
                   foundProject.save();
                   console.log(createdIssue);
-                  res.redirect(process.cwd() + "/" + project);
+                  res.json(createdIssue);
                 }
               })
             }
