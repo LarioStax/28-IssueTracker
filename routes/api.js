@@ -31,7 +31,21 @@ module.exports = function (app) {
         } else if (!foundProject) {
           res.json(`No issues found for ${project} project.`);
         } else {
-          res.json(foundProject.issues);
+          let queryObject = filterProvidedInputs(req.query);
+          if (req.query.open == "false") {queryObject.open = false};
+          if (req.query.open == "true") {queryObject.open = true};
+          //No query - return all found issues
+          if (Object.keys(queryObject).length === 0) {
+            res.json(foundProject.issues);
+          } else {
+            //Loop through all key-value pairs provided in query object
+            Object.keys(queryObject).forEach(function (key) {
+              foundProject.issues = foundProject.issues.filter( function (issueObject) {
+                return issueObject[key] === queryObject[key]
+              })
+              res.json(foundProject.issues);
+            })
+          }
         }
       })
     })
