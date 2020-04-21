@@ -38,13 +38,15 @@ module.exports = function (app) {
           if (Object.keys(queryObject).length === 0) {
             res.json(foundProject.issues);
           } else {
-            //Loop through all key-value pairs provided in query object
+            // Loop through all key-value pairs provided in query object
             Object.keys(queryObject).forEach(function (key) {
+              //Assign all issues that pass the filter to foundProject.issues
               foundProject.issues = foundProject.issues.filter( function (issueObject) {
+                //Check wether issue key:value is same as query's key:value
                 return issueObject[key] === queryObject[key]
               })
-              res.json(foundProject.issues);
             })
+            res.json(foundProject.issues);
           }
         }
       })
