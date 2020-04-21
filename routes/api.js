@@ -27,8 +27,10 @@ module.exports = function (app) {
       let conditions = {name: project};
       // BUGS OUT IF PROJECT EMPTY! FIX!
       Project.findOne(conditions).populate("issues").exec(function (err, foundProject) { //Populate required - returns only individual issues._ids otherwise
-        if (err || !foundProject) {
+        if (err) {
           console.log(err);
+        } else if (!foundProject) {
+          res.json(`No issues found for ${project} project.`);
         } else {
           res.json(foundProject.issues);
         }
@@ -109,7 +111,7 @@ module.exports = function (app) {
       //Find the issue by id and update it with updated fields from updateObject
       Issue.findByIdAndUpdate(req.body._id, updateObject, {new: true}, function(err, updatedIssue) {
         if (err) {
-          res.json("Could not update " + req.body._id)
+          res.json(`Could not update ${req.body._id}!`)
         } else {
           updatedIssue.updated_on = new Date();
           res.json("Successfully updated!");
@@ -123,9 +125,9 @@ module.exports = function (app) {
       }
       Issue.findByIdAndRemove(req.body._id, function(err, removedIssue) {
         if (err) {
-          res.json("Could not delete " + req.body._id);
+          res.json(`Could not delete ${req.body._id}!`);
         } else {
-          res.json("Deleted " + req.body._id);
+          res.json(`Deleted ${req.body._id}!`);
         }
       })
       
