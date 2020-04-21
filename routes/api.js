@@ -67,15 +67,16 @@ module.exports = function (app) {
             if (err) {
               console.log(err);
             } else {
-              let newIssue = {
-                issue_title: req.body.issue_title,
-                issue_text: req.body.issue_text,
-                created_by: req.body.created_by,
-                assigned_to: req.body.assigned_to || "",
-                status_text: req.body.status_text || "",
-                open: true
+              let newIssue = filterProvidedInputs(req.body);
+              //Set default values
+              newIssue.open = true;
+              if (!newIssue.assigned_to) {newIssue.assigned_to = "";}
+              if (!newIssue.status_text) {newIssue.status_text = "";}
+              //Return error message if some of required fields are missing
+              if (!newIssue.issue_title || !newIssue.issue_text || !newIssue.created_by) {
+                return res.json("Missing required inputs!");
               }
-              //Create new Issue and push it to the issues array of the found object
+              //Create new issue and push it to the issues array of the found object
               Issue.create(newIssue, function(err, createdIssue) {
                 if (err) {
                   console.log(err);
