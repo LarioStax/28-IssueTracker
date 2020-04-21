@@ -82,31 +82,14 @@ module.exports = function (app) {
     
     .put(function (req, res){
 
-      //Default to "" if not provided
-      const _id = req.body._id || "";
-      const issue_title = req.body.issue_title || "";
-      const issue_text = req.body.issue_text || "";
-      const created_by = req.body.created_by || "";
-      const assigned_to = req.body.assigned_to || "";
-      const status_text = req.body.status_text || "";
-      const open = req.body.open || "";
+      let updateObject = filterProvidedInputs(req.body);
   
-      if (!_id) {
+      if (!updateObject._id) {
         return res.json("No ID entered!");
       }
-  
-      if (!issue_title && !issue_text && !created_by && !assigned_to && !status_text && !open) {
-        res.json("No updated field sent!");
+      if (!updateObject.issue_title && !updateObject.issue_text && !updateObject.created_by && !updateObject.assigned_to && !updateObject.status_text && updateObject.open) {
+        return res.json("No updated field sent!");
       }
-  
-      let updateObject = {};
-      //Check wether the field was updated (if not, it will be an empty string)
-      if (issue_title) {updateObject.issue_title = issue_title};
-      if (issue_text) {updateObject.issue_text = issue_text};
-      if (created_by) {updateObject.created_by = created_by};
-      if (assigned_to) {updateObject.assigned_to = assigned_to};
-      if (status_text) {updateObject.status_text = status_text};
-      if (open) {updateObject.open = false} else {updateObject.open = true};
   
       //Find the issue by id and update it with updated fields from updateObject
       Issue.findByIdAndUpdate(req.body._id, updateObject, {new: true}, function(err, updatedIssue) {
