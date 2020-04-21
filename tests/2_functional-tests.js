@@ -100,7 +100,18 @@ suite('Functional Tests', function() {
       });
       
       test('Multiple fields to update', function(done) {
-        
+        chai.request(server)
+        .put("/api/issues/test")
+        .send({
+          _id: savedId,
+          issue_title: "NEW TITLE",
+          issue_text: "NEW TEXT"
+        })
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body, "Successfully updated!");
+          done();
+        })
       });
       
     });
