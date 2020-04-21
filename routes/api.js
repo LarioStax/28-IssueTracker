@@ -90,15 +90,15 @@ module.exports = function (app) {
       const assigned_to = req.body.assigned_to || "";
       const status_text = req.body.status_text || "";
       const open = req.body.open || "";
-
+  
       if (!_id) {
         return res.json("No ID entered!");
       }
-
+  
       if (!issue_title && !issue_text && !created_by && !assigned_to && !status_text && !open) {
         res.json("No updated field sent!");
       }
-
+  
       let updateObject = {};
       //Check wether the field was updated (if not, it will be an empty string)
       if (issue_title) {updateObject.issue_title = issue_title};
@@ -107,7 +107,7 @@ module.exports = function (app) {
       if (assigned_to) {updateObject.assigned_to = assigned_to};
       if (status_text) {updateObject.status_text = status_text};
       if (open) {updateObject.open = false} else {updateObject.open = true};
-
+  
       //Find the issue by id and update it with updated fields from updateObject
       Issue.findByIdAndUpdate(req.body._id, updateObject, {new: true}, function(err, updatedIssue) {
         if (err) {
@@ -134,3 +134,27 @@ module.exports = function (app) {
     });
     
 };
+
+function filterProvidedInputs(fromObject) {
+  const returnObject = {};
+
+  //Default to "" if not provided
+  const _id = fromObject._id || "";
+  const issue_title = fromObject.issue_title || "";
+  const issue_text = fromObject.issue_text || "";
+  const created_by = fromObject.created_by || "";
+  const assigned_to = fromObject.assigned_to || "";
+  const status_text = fromObject.status_text || "";
+  const open = fromObject.open || "";
+
+  //Check wether the field was provided and assign it to obj (if not, it will be an empty string)
+  if (_id) {returnObject._id = _id}
+  if (issue_title) {returnObject.issue_title = issue_title};
+  if (issue_text) {returnObject.issue_text = issue_text};
+  if (created_by) {returnObject.created_by = created_by};
+  if (assigned_to) {returnObject.assigned_to = assigned_to};
+  if (status_text) {returnObject.status_text = status_text};
+  if (open) {returnObject.open = false} else {returnObject.open = true};
+
+  return returnObject;
+}
