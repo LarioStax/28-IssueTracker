@@ -86,7 +86,17 @@ suite('Functional Tests', function() {
       });
       
       test('One field to update', function(done) {
-        
+        chai.request(server)
+        .put("/api/issues/test")
+        .send({
+          _id: savedId,
+          issue_title: "NEW TITLE"
+        })
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body, "Successfully updated!");
+          done();
+        })
       });
       
       test('Multiple fields to update', function(done) {
