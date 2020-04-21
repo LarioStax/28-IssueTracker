@@ -51,8 +51,6 @@ suite('Functional Tests', function() {
           assert.equal(res.body.issue_title, "Title");
           assert.equal(res.body.issue_text, "text");
           assert.equal(res.body.created_by, "Functional Test - Required fields filled in");
-          assert.equal(res.body.assigned_to, "");
-          assert.equal(res.body.status_text, "");
           done();
         });
       });
