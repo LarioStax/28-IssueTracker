@@ -144,7 +144,6 @@ suite('Functional Tests', function() {
         .query({issue_title: "NEW TITLE"})
         .end(function (err, res) {
           assert.equal(res.status, 200);
-          console.log(res.body);
           assert.property(res.body[0], 'issue_title');
           assert.equal(res.body[0].issue_title, 'NEW TITLE');
           assert.property(res.body[0], 'issue_text');
@@ -160,7 +159,25 @@ suite('Functional Tests', function() {
       });
       
       test('Multiple filters (test for multiple fields you know will be in the db for a return)', function(done) {
-        
+        chai.request(server)
+        .get("/api/issues/test")
+        .query({issue_title: "NEW TITLE", issue_text: "NEW TEXT"})
+        .end(function (err, res) {
+          console.log(res.body);
+          assert.equal(res.status, 200);
+          assert.property(res.body[0], 'issue_title');
+          assert.equal(res.body[0].issue_title, 'NEW TITLE');
+          assert.property(res.body[0], 'issue_text');
+          assert.equal(res.body[0].issue_text, 'NEW TEXT');
+          assert.property(res.body[0], 'created_on');
+          assert.property(res.body[0], 'updated_on');
+          assert.property(res.body[0], 'created_by');
+          assert.property(res.body[0], 'assigned_to');
+          assert.property(res.body[0], 'open');
+          assert.property(res.body[0], 'status_text');
+          assert.property(res.body[0], '_id');
+          done();
+        })
       });
       
     });
