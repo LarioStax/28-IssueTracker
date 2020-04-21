@@ -185,11 +185,11 @@ suite('Functional Tests', function() {
       
       test('No _id', function(done) {
         chai.request(server)
-        .delete("/api/issues/test")
+        .delete('/api/issues/apitest')
         .send({})
-        .end(function(err, res) {
+        .end(function(err, res){
           assert.equal(res.status, 200);
-          assert.equal(res.body, "No ID entered!")
+          assert.equal(res.body, "No ID entered!");
           done();
         })
       });
