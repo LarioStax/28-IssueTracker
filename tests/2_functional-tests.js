@@ -13,6 +13,8 @@ var server = require('../app');
 
 chai.use(chaiHttp);
 
+let savedId = "";
+
 suite('Functional Tests', function() {
   
     suite('POST /api/issues/{project} => object with issue data', function() {
@@ -34,6 +36,8 @@ suite('Functional Tests', function() {
           assert.equal(res.body.created_by, "Functional Test - Every field filled in");
           assert.equal(res.body.assigned_to, "Chai and Mocha");
           assert.equal(res.body.status_text, "In QA");
+          //Save ID --> Will be required for put and delete tests
+          savedId = res.body._id;
           done();
         });
       });
@@ -71,7 +75,14 @@ suite('Functional Tests', function() {
     suite('PUT /api/issues/{project} => text', function() {
       
       test('No body', function(done) {
-        
+        chai.request(server)
+        .put("/api/issues/test")
+        .send({_id: savedId})
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body, "No updated field sent!")
+          done();
+        })
       });
       
       test('One field to update', function(done) {
