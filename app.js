@@ -26,7 +26,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(process.env.DATABASE,
   {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   });
 
 mongoose.connection.on("connected", function() {
