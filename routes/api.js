@@ -25,7 +25,6 @@ module.exports = function (app) {
     .get(function (req, res){
       let project = req.params.project;
       let conditions = {name: project};
-      // BUGS OUT IF PROJECT EMPTY! FIX!
       Project.findOne(conditions).populate("issues").exec(function (err, foundProject) { //Populate required - returns only individual issues._ids otherwise
         if (err) {
           console.log(err);
@@ -118,6 +117,7 @@ module.exports = function (app) {
     
 };
 
+//Returns an object with provided inputs from passed object
 function filterProvidedInputs(fromObject) {
   const returnObject = {};
 
@@ -137,7 +137,7 @@ function filterProvidedInputs(fromObject) {
   if (created_by) {returnObject.created_by = created_by};
   if (assigned_to) {returnObject.assigned_to = assigned_to};
   if (status_text) {returnObject.status_text = status_text};
-  if (open) {returnObject.open = false} else {returnObject.open = true};
-
+  if (open == "false") {returnObject.open = false} else {returnObject.open = true};
+ 
   return returnObject;
 }
