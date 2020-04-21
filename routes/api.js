@@ -83,7 +83,6 @@ module.exports = function (app) {
                   createdIssue.save();
                   foundProject.issues.push(createdIssue);
                   foundProject.save();
-                  console.log(createdIssue);
                   res.json(createdIssue);
                 }
               })
