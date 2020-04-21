@@ -163,7 +163,6 @@ suite('Functional Tests', function() {
         .get("/api/issues/test")
         .query({issue_title: "NEW TITLE", issue_text: "NEW TEXT"})
         .end(function (err, res) {
-          console.log(res.body);
           assert.equal(res.status, 200);
           assert.property(res.body[0], 'issue_title');
           assert.equal(res.body[0].issue_title, 'NEW TITLE');
@@ -185,11 +184,18 @@ suite('Functional Tests', function() {
     suite('DELETE /api/issues/{project} => text', function() {
       
       test('No _id', function(done) {
-        
+        chai.request(server)
+        .delete("/api/issues/test")
+        .send({})
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body, "No ID entered!")
+          done();
+        })
       });
       
       test('Valid _id', function(done) {
-        
+
       });
       
     });
