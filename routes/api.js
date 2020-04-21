@@ -120,7 +120,7 @@ module.exports = function (app) {
     
     .delete(function (req, res){
       if (!req.body._id) {
-        res.json("No ID entered!");
+        return res.json("No ID entered!");
       }
       Issue.findByIdAndRemove(req.body._id, function(err, removedIssue) {
         if (err) {
