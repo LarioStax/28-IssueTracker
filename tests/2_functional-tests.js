@@ -195,7 +195,14 @@ suite('Functional Tests', function() {
       });
       
       test('Valid _id', function(done) {
-
+        chai.request(server)
+        .delete("/api/issues/test")
+        .send({_id: savedId})
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body, `Deleted ${savedId}!`)
+          done();
+        })
       });
       
     });
