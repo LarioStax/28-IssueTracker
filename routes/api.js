@@ -82,6 +82,7 @@ module.exports = function (app) {
     .put(function (req, res){
 
       let updateObject = filterProvidedInputs(req.body);
+      if (req.body.open == "false") {updateObject.open = false} else {updateObject.open = true};
   
       if (!updateObject._id) {
         return res.json("No ID entered!");
@@ -118,6 +119,10 @@ module.exports = function (app) {
 };
 
 //Returns an object with provided inputs from passed object
+// =========================================== //
+// !!!!! Does not handle fromObject.open !!!!! //
+// =========================================== //
+
 function filterProvidedInputs(fromObject) {
   const returnObject = {};
 
@@ -128,7 +133,7 @@ function filterProvidedInputs(fromObject) {
   const created_by = fromObject.created_by || "";
   const assigned_to = fromObject.assigned_to || "";
   const status_text = fromObject.status_text || "";
-  const open = fromObject.open || "";
+  //const open = fromObject.open || "";
 
   //Check wether the field was provided and assign it to obj (if not, it will be an empty string)
   if (_id) {returnObject._id = _id}
@@ -137,7 +142,7 @@ function filterProvidedInputs(fromObject) {
   if (created_by) {returnObject.created_by = created_by};
   if (assigned_to) {returnObject.assigned_to = assigned_to};
   if (status_text) {returnObject.status_text = status_text};
-  if (open == "false") {returnObject.open = false} else {returnObject.open = true};
+  //if (open == "false") {returnObject.open = false} else {returnObject.open = true};
  
   return returnObject;
 }
